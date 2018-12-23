@@ -3,11 +3,11 @@ using ImageAPI.Interfaces;
 
 namespace ImageAPI.Resizer
 {
-    public class ImageResizer : IResizer
+    public class Resizer : IResizer
     {
         private IResizeStrategyCreator _resizeStretegyCreator;
 
-        public ImageResizer(IResizeStrategyCreator resizeStrategyCreator)
+        public Resizer(IResizeStrategyCreator resizeStrategyCreator)
         {
             _resizeStretegyCreator = resizeStrategyCreator;
         }

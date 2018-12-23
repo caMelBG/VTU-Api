@@ -6,7 +6,7 @@ using System.Drawing.Imaging;
 
 namespace ImageAPI.Converter
 {
-    public class ImageConverter : IConverter
+    public class Converter : IConverter
     {
         public void Convert(string sourceFile, string destinationFile, ImageType type)
         {
