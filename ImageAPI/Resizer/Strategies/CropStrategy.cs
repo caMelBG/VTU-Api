@@ -1,5 +1,6 @@
 ﻿using ImageAPI.Interfaces;
 using System.Drawing;
+using System.Drawing.Imaging;
 
 namespace ImageAPI.Resizer.Strategies
 {
@@ -7,17 +8,31 @@ namespace ImageAPI.Resizer.Strategies
     {
         public void Process(string sourceFile, string destinationFile, int width, int height, int startX, int startY)
         {
-            var point = new Point(startX, startY);
-            var size = new Size(width, height);
-            var srcRect = new Rectangle(point, size);
-            var sourceImage = Image.FromFile(sourceFile) as Bitmap;
-            var destinationImage = new Bitmap(srcRect.Width, srcRect.Height);
+            Bitmap srcImg = Image.FromFile(sourceFile) as Bitmap;
+            ImageFormat imgFormat = srcImg.RawFormat;
 
-            using (var graphics = Graphics.FromImage(destinationImage))
+            Rectangle destRect = new Rectangle(startX, startY, width, height);
+
+            Bitmap bmp = new Bitmap(destRect.Width, destRect.Height, PixelFormat.Format24bppRgb);
+            Rectangle srcRect = new Rectangle(0, 0, destRect.Width, destRect.Height);
+
+            //int srcWidth, srcHeight;
+            float srcRatio = width / height;
+            if (startX < 0 || (startX + width) > srcImg.Width || startY < 0 || (startY + height) > srcImg.Height)
             {
-                var destRect = new Rectangle(0, 0, destinationImage.Width, destinationImage.Height);
-                graphics.DrawImage(sourceImage, destRect, srcRect, GraphicsUnit.Pixel);
+                //throw new CropOutOfRange("Selected area is out of destination image range.");
             }
+            Graphics gfx = Graphics.FromImage(bmp);
+            gfx.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+            gfx.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+            gfx.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
+            gfx.DrawImage(srcImg, srcRect, destRect, GraphicsUnit.Pixel);
+
+            // Image destImage = bmp.Clone(destRect, bmp.PixelFormat);
+            bmp.Save(destinationFile, System.Drawing.Imaging.ImageFormat.Jpeg);
+            srcImg.Dispose();
+            bmp.Dispose();
+            gfx.Dispose();
         }
     }
 }
