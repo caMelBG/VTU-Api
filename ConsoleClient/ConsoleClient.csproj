@@ -4,15 +4,16 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{68DCFF97-12F7-40E0-9D16-B505963CA812}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ImageAPI</RootNamespace>
-    <AssemblyName>ImageAPI</AssemblyName>
+    <ProjectGuid>{B9692B55-14C3-4539-AA7C-5E0BB1400117}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>ConsoleClient</RootNamespace>
+    <AssemblyName>ConsoleClient</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -22,6 +23,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -32,7 +34,6 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -41,22 +42,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Converter\Converter.cs" />
-    <Compile Include="Enums\ImageType.cs" />
-    <Compile Include="Enums\ResizeType.cs" />
-    <Compile Include="Interfaces\IConverter.cs" />
-    <Compile Include="Interfaces\IResizer.cs" />
-    <Compile Include="Interfaces\IResizeStrategy.cs" />
-    <Compile Include="Interfaces\IResizeStrategyCreator.cs" />
+    <Compile Include="ConsoleProvider.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Resizer\Strategies\CropStrategy.cs" />
-    <Compile Include="Resizer\Resizer.cs" />
-    <Compile Include="Resizer\Strategies\ResizeStrategyCreator.cs" />
-    <Compile Include="Resizer\Strategies\KeepAspectStrategy.cs" />
-    <Compile Include="Resizer\Strategies\SkewStrategy.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Exceptions\" />
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ImageAPI\ImageAPI.csproj">
+      <Project>{68dcff97-12f7-40e0-9d16-b505963ca812}</Project>
+      <Name>ImageAPI</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

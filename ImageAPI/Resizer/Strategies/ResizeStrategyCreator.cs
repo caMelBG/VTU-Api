@@ -3,7 +3,7 @@ using ImageAPI.Interfaces;
 
 namespace ImageAPI.Resizer.Strategies
 {
-    public class ImageResizeStrategyCreator : IResizeStrategyCreator
+    public class ResizeStrategyCreator : IResizeStrategyCreator
     {
         public IResizeStrategy GetStrategy(ResizeType resizeType)
         {

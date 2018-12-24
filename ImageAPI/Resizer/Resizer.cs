@@ -17,8 +17,6 @@ namespace ImageAPI.Resizer
             var resizer = _resizeStretegyCreator.GetStrategy(type);
 
             resizer.Process(sourceFile, destinationFile, width, height, startX, startY);
-
-            throw new System.NotImplementedException();
         }
     }
 }
