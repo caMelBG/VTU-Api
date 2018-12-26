@@ -1,0 +1,146 @@
+﻿@model ProcessImageModel
+@using ImageAPI.Enums
+@using MvcClient.Controllers
+
+@{
+    Layout = "";
+}
+
+@Scripts.Render("~/bundles/jquery")
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="~/Scripts/jquery-1.10.2.js"></script>
+<script src="@Url.Content("~/Scripts/jquery.unobtrusive-ajax.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.js")" type="text/javascript"></script>
+
+<label class="text-danger" id="error-container"></label>
+
+@{
+    var ajaxOptions = new AjaxOptions()
+    {
+        OnFailure = "showError(error);",
+        OnSuccess = "updateImage(data);",
+        HttpMethod = "POST",
+        Url = Url.Action("SaveImage", "Home"),
+    };
+}
+@using (Ajax.BeginForm("SaveImage", "Home", ajaxOptions, new { @class = "row", enctype = "multipart/form-data" }))
+{
+    <div class="col-md-offset-3">
+        <input class="col-md-4 image" type="file" name="image" id="image" />
+        <input class="col-md-1" type="submit" value="Load" />
+    </div>
+}
+
+@using (Ajax.BeginForm("ProcessImage", "Home", new AjaxOptions() { HttpMethod = "POST", OnSuccess = "previewImage(data);" }))
+{
+    <div class="row">
+        <div class="col-md-3">
+            <input type="hidden" id="input-image" name="@nameof(Model.InputImagePath)" />
+            <div class="form-group">
+                <label>@ProcessType.Resize  </label><input id="resize-checkbox" name="@nameof(Model.ProceesType)" type="radio" value="@((int)ProcessType.Resize)" />
+                <label>@ProcessType.Convert  </label><input id="convert-checkbox" name="@nameof(Model.ProceesType)" type="radio" value="@((int)ProcessType.Convert)" />
+            </div>
+
+            <div class="form-group" id="convert-option">
+                <label>@ImageType.Jpg  </label><input name="@nameof(Model.ImageType)" type="radio" value="@((int)ImageType.Jpg)" />
+                <label>@ImageType.Png  </label><input name="@nameof(Model.ImageType)" type="radio" value="@((int)ImageType.Png)" />
+                <label>@ImageType.Gif  </label><input name="@nameof(Model.ImageType)" type="radio" value="@((int)ImageType.Gif)" />
+            </div>
+
+            <div class="form-group" id="resize-option">
+                <label>@ResizeType.Crop  </label><input id="crop" name="@nameof(Model.ResizeType)" type="radio" value="@((int)ResizeType.Crop)" />
+                <label>@ResizeType.KeepAspect  </label><input id="keep-aspect" name="@nameof(Model.ResizeType)" type="radio" value="@((int)ResizeType.KeepAspect)" />
+                <label>@ResizeType.Skew  </label><input id="skew" name="@nameof(Model.ResizeType)" type="radio" value="@((int)ResizeType.Skew)" />
+            </div>
+
+            <div class="form-group" id="sizes">
+                <label class="col-md-3">Width: </label> <input class="col-md-3" name="@nameof(Model.Width)" type="text" id="width" />
+                <label class="col-md-3">Height: </label> <input class="col-md-3" name="@nameof(Model.Height)" type="text" id="height" />
+
+                <label class="col-md-3 crop-xy">X: </label> <input name="@nameof(Model.StartX)" class="col-md-3 crop-xy" type="text" id="x" />
+                <label class="col-md-3 crop-xy">Y: </label> <input name="@nameof(Model.StartY)" class="col-md-3 crop-xy" type="text" id="y" />
+            </div>
+
+            <br />
+            <label>Output file name: </label> <input type="text" name="@nameof(Model.OutputFileName)" />
+            <input class="btn btn-primary col-md-offset-6" type="submit" value="Process" data-toggle="modal" data-target="#myModal" />
+
+        </div>
+        <div class="content col-md-9">
+            <img id="image-show" style="width: 400px; border: 1px dashed; border-color: red;" src="" />
+        </div>
+    </div>
+}
+
+<!-- Modal -->
+<div id="myModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <img style="width: 400px;" id="preview-image" src="a" />
+            </div>
+            <div class="modal-footer">
+                <a class="btn btn-primary" id="donwload-image" href="" download>Download</a>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+
+    $('#convert-option,#resize-option,#sizes,.crop-xy').hide();
+
+    $('#resize-checkbox').on('click', () => {
+        $('#resize-option').show();
+        $('#convert-option').hide();
+        $('.crop-xy').hide();
+        $('#sizes').hide();
+    });
+
+    $('#convert-checkbox').on('click', () => {
+        $('#resize-option').hide();
+        $('#convert-option').show();
+        $('.crop-xy').hide();
+        $('#sizes').hide();
+    });
+
+    $('#crop,#keep-aspect,#skew').on('click', () => {
+        $('.crop-xy').hide();
+        $('#sizes').show();
+    });
+
+    $('#crop').on('click', () => {
+        $('.crop-xy').show();
+    });
+
+
+    function showError(data) {
+        console.log(data.responseText);
+        $('#error-container').html(data);
+    }
+
+    function updateImage(imagePath) {
+        $('#input-image').val(imagePath);
+        $('#image-show').attr('src', imagePath);
+    }
+
+    function previewImage(imagePath) {
+        $('#preview-image').attr('src', imagePath);
+        $('#donwload-image').attr('href', imagePath);
+    }
+
+    $('.modal').on('shown.bs.modal', function () {
+        $('.modal').trigger('focus')
+    })
+
+</script>

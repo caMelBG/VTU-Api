@@ -13,8 +13,10 @@ namespace ImageAPI.Converter
             //TODO validate
 
             var imageFormat = this.ParseImageType(type);
-            var image = Image.FromFile(sourceFile);
-            image.Save(destinationFile, imageFormat);
+            using (var image = Image.FromFile(sourceFile))
+            {
+                image.Save(destinationFile, imageFormat);
+            }
         }
 
         private ImageFormat ParseImageType(ImageType type)
