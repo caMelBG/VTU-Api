@@ -1,8 +1,10 @@
 ﻿using ImageAPI.Enums;
+using ImageAPI.Exceptions;
 using ImageAPI.Interfaces;
 using System;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.IO;
 
 namespace ImageAPI.Converter
 {
@@ -10,12 +12,39 @@ namespace ImageAPI.Converter
     {
         public void Convert(string sourceFile, string destinationFile, ImageType type)
         {
-            //TODO validate
-
-            var imageFormat = this.ParseImageType(type);
-            using (var image = Image.FromFile(sourceFile))
+            if (string.IsNullOrEmpty(sourceFile))
             {
-                image.Save(destinationFile, imageFormat);
+                throw new ArgumentNullException(nameof(sourceFile));
+            }
+            else if (string.IsNullOrEmpty(destinationFile))
+            {
+                throw new ArgumentNullException(nameof(destinationFile));
+            }
+            else if (Directory.Exists(Path.GetDirectoryName(sourceFile)) == false)
+            {
+                throw new DirectoryNotFoundException(Path.GetDirectoryName(sourceFile));
+            }
+            else if (Directory.Exists(Path.GetDirectoryName(destinationFile)) == false)
+            {
+                throw new DirectoryNotFoundException(Path.GetDirectoryName(destinationFile));
+            }
+            else if (File.Exists(sourceFile))
+            {
+                throw new FileNotFoundException($"No file found with name {Path.GetFileName(sourceFile)}.");
+            }
+
+            try
+            {
+                var imageFormat = this.ParseImageType(type);
+                using (var image = Image.FromFile(sourceFile))
+                {
+                    image.Save(destinationFile, imageFormat);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
             }
         }
 
@@ -30,9 +59,8 @@ namespace ImageAPI.Converter
                 case ImageType.Jpg:
                     return ImageFormat.Jpeg;
             }
-
-            //TODO
-            throw new Exception();
+            
+            throw new ImageFormatNotSupportedException($"Image type {type} is not supported.");
         }
     }
 }

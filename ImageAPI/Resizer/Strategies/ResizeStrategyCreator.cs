@@ -1,4 +1,5 @@
 ﻿using ImageAPI.Enums;
+using ImageAPI.Exceptions;
 using ImageAPI.Interfaces;
 
 namespace ImageAPI.Resizer.Strategies
@@ -17,8 +18,7 @@ namespace ImageAPI.Resizer.Strategies
                     return new CropStrategy();
             }
 
-            //TODO
-            throw new System.Exception();
+            throw new ResizeTypeNotSupportedException($"Resize type {resizeType} is not supported.");
         }
     }
 }

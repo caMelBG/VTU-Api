@@ -44,6 +44,8 @@
     <Compile Include="Converter\Converter.cs" />
     <Compile Include="Enums\ImageType.cs" />
     <Compile Include="Enums\ResizeType.cs" />
+    <Compile Include="Exceptions\ImageFormatNotSupportedException.cs" />
+    <Compile Include="Exceptions\ResizeTypeNotSupportedException.cs" />
     <Compile Include="Interfaces\IConverter.cs" />
     <Compile Include="Interfaces\IResizer.cs" />
     <Compile Include="Interfaces\IResizeStrategy.cs" />
@@ -55,8 +57,6 @@
     <Compile Include="Resizer\Strategies\KeepAspectStrategy.cs" />
     <Compile Include="Resizer\Strategies\SkewStrategy.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Exceptions\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
