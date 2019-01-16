@@ -1,0 +1,253 @@
+﻿@using ImageAPI.Enums
+@using MvcClient.Controllers
+
+<style>
+    img {
+        height: 300px;
+        padding: 25px;
+    }
+
+    .row {
+        padding: 10px;
+    }
+
+    #selected-image {
+        border: red 3px solid;
+        border-radius: 5px;
+    }
+</style>
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="form-group">
+            <label id="error-message" class="text-danger"> </label>
+        </div>
+
+        <div class="form-group">
+            <input type="hidden" id="selected-image" value="" />
+            <input class="btn btn-default" id="resize-button" type="button" value="@(ProcessType.Resize)" />
+            <input class="btn btn-default" id="convert-button" type="button" value="@(ProcessType.Convert)" />
+            <input class="btn btn-primary col-md-offset-3" id="btn-submit" type="submit" value="Process" />
+        </div>
+
+        <div class="form-group">
+            <label class="col-md-3">Output</label>
+            <div class="col-md-9">
+                <input id="image-name" class="form-control" type="text" />
+            </div>
+        </div>
+
+        <div class="form-group" id="convert-option">
+            <input id="" type="radio" name="a" value="@((int)ImageType.None)" checked style="display: none;" />
+            <div class="form-inline">
+                <label>@ImageType.Jpg</label>
+                <input id="jpg" type="radio" name="a" value="@(ImageType.Jpg)" />
+            </div>
+
+            <div class="form-inline">
+                <label>@ImageType.Png</label>
+                <input id="png" type="radio" name="a" value="@(ImageType.Png)" />
+            </div>
+
+            <div class="form-inline">
+                <label>@ImageType.Gif</label>
+                <input id="gif" type="radio" name="a" value="@(ImageType.Gif)" />
+            </div>
+        </div>
+
+        <div class="form-group" id="resize-option">
+            <input id="" type="radio" name="b" value="@((int)ResizeType.None)" checked style="display: none;"/>
+            <div class="form-inline">
+                <label>@ResizeType.Crop</label>
+                <input id="crop" type="radio" name="b" value="@((int)ResizeType.Crop)" />
+            </div>
+
+            <div class="form-inline">
+                <label>@ResizeType.KeepAspect</label>
+                <input id="keep-aspect" type="radio" name="b" value="@((int)ResizeType.KeepAspect)" />
+            </div>
+
+            <div class="form-inline">
+                <label>@ResizeType.Skew</label>
+                <input id="skew" type="radio" name="b" value="@((int)ResizeType.Skew)" />
+            </div>
+        </div>
+
+        <div id="sizes">
+            <div class="form-group">
+                <label class="col-md-3">Width</label>
+                <div class="col-md-9">
+                    <input class="col-md-3 form-control" type="text" id="width" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-3">Height</label>
+                <div class="col-md-9">
+                    <input class="col-md-3 form-control" type="text" id="height" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-6">
+                    <label class="col-md-3 crop-xy">Y</label>
+                    <div class="col-md-9">
+                        <input class="col-md-3 crop-xy form-control" type="text" id="y" />
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <label class="col-md-3 crop-xy">X</label>
+                    <div class="col-md-9">
+                        <input class="col-md-3 crop-xy form-control" type="text" id="x" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-8">
+        @for (int index = 1; index <= 5; index++)
+        {
+            <img src="~/Content/Pictures/organza@(index).jpg" class="col-md-6" />
+        }
+    </div>
+</div>
+
+@section scripts {
+<script>
+        $('img').on('click', function () {
+            $('img').attr('id', '');
+            $(this).attr('id', 'selected-image');
+
+            var selectedImagePath = $(this).attr('src');
+            $('#selected-image').val(selectedImagePath);
+        });
+
+        function showErrorMessage(message) {
+            $('#error-message').text(message);
+            $('#error-message').show();
+        }
+
+        $('#btn-submit').on('click', function () {
+            $('#error-message').hide();
+            if ($('#selected-image').val() == undefined || $('#selected-image').val() == '') {
+                showErrorMessage("Please select image");
+            }
+
+            if ($('#image-name').val() == undefined || $('#image-name').val() == '') {
+                showErrorMessage('Please fill output image name');
+            }
+
+            var url = '';
+            var data = {};
+            if ($('#resize-button').hasClass('btn-success'))
+            {
+                url = '@Url.Action("Resize")'
+                var resizeType = $('input[name=b]').val();
+                if (resizeType == '0')
+                {
+                    showErrorMessage('Please choose resize type');
+                    return;
+                }
+
+                var width = $('#width').val();
+                var height = $('#height').val();
+                var x = $('#x').val();
+                var y = $('#y').val();
+
+                data = {
+                    imageName, resizeType, width, height, x, y,
+                }
+            }
+            else if ($('#convert-button').hasClass('btn-success'))
+            {
+                url = '@Url.Action("Convert")';
+                var imageType = $('input[name=a]').val();
+                if (imageType == '0')
+                {
+                    showErrorMessage('Please choose image type');
+                    return;
+                }
+
+                data = {
+                    imageName, imageType
+                };
+            }
+
+            $.ajax({
+                url: url,
+                method: 'post',
+                data: data,
+                success: function () {
+
+                },
+                fail: function () {
+
+                },
+            });
+        });
+
+</script>
+
+    <script>
+
+        $('#convert-option,#resize-option,#sizes,.crop-xy').hide();
+
+        $('#resize-button').on('click', () => {
+
+            $('#resize-button').addClass('btn-success');
+            $('#resize-button').removeClass('btn-default');
+
+            $('#convert-button').addClass('btn-default');
+            $('#convert-button').removeClass('btn-success');
+
+            $('#resize-option').show();
+            $('#convert-option').hide();
+            $('.crop-xy').hide();
+            $('#sizes').hide();
+        });
+
+        $('#convert-button').on('click', () => {
+
+            $('#convert-button').addClass('btn-success');
+            $('#convert-button').removeClass('btn-default');
+
+            $('#resize-button').addClass('btn-default');
+            $('#resize-button').removeClass('btn-success');
+
+            $('#resize-option').hide();
+            $('#convert-option').show();
+            $('.crop-xy').hide();
+            $('#sizes').hide();
+        });
+
+        $('#crop,#keep-aspect,#skew').on('click', () => {
+            $('.crop-xy').hide();
+            $('#sizes').show();
+        });
+
+        $('#crop').on('click', () => {
+            $('.crop-xy').show();
+        });
+
+
+        function showError(data) {
+            console.log(data.responseText);
+            $('#error-container').html(data);
+        }
+
+        function updateImage(imagePath) {
+            $('#input-image').val(imagePath);
+            $('#image-show').attr('src', imagePath);
+        }
+
+        function previewImage(imagePath) {
+            $('#preview-image').attr('src', imagePath);
+            $('#donwload-image').attr('href', imagePath);
+        }
+
+        $('.modal').on('shown.bs.modal', function () {
+            $('.modal').trigger('focus')
+        })
+
+    </script>
+}
