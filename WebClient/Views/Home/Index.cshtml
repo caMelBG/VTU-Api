@@ -30,29 +30,29 @@
 {
     <div class="row">
         <div class="col-md-3">
-            <input type="hidden" id="input-image" name="@nameof(Model.InputImagePath)" />
+            <input type="hidden" id="input-image" name="InputImagePath" />
             <div class="form-group">
-                <label>@ProcessType.Resize  </label><input id="resize-checkbox" name="@nameof(Model.ProceesType)" type="radio" value="@((int)ProcessType.Resize)" />
-                <label>@ProcessType.Convert  </label><input id="convert-checkbox" name="@nameof(Model.ProceesType)" type="radio" value="@((int)ProcessType.Convert)" />
+                <label>@ProcessType.Resize  </label><input id="resize-checkbox" name="ProceesType" type="radio" value="@((int)ProcessType.Resize)" />
+                <label>@ProcessType.Convert  </label><input id="convert-checkbox" name="ProceesType" type="radio" value="@((int)ProcessType.Convert)" />
             </div>
             <div class="form-group" id="convert-option">
-                <label>@ImageType.Jpg  </label><input name="@nameof(Model.ImageType)" type="radio" value="@((int)ImageType.Jpg)" />
-                <label>@ImageType.Png  </label><input name="@nameof(Model.ImageType)" type="radio" value="@((int)ImageType.Png)" />
-                <label>@ImageType.Gif  </label><input name="@nameof(Model.ImageType)" type="radio" value="@((int)ImageType.Gif)" />
+                <label>@ImageType.Jpg  </label><input name="ImageType" type="radio" value="@((int)ImageType.Jpg)" />
+                <label>@ImageType.Png  </label><input name="ImageType" type="radio" value="@((int)ImageType.Png)" />
+                <label>@ImageType.Gif  </label><input name="ImageType" type="radio" value="@((int)ImageType.Gif)" />
             </div>
             <div class="form-group" id="resize-option">
-                <label>@ResizeType.Crop  </label><input id="crop" name="@nameof(Model.ResizeType)" type="radio" value="@((int)ResizeType.Crop)" />
-                <label>@ResizeType.KeepAspect  </label><input id="keep-aspect" name="@nameof(Model.ResizeType)" type="radio" value="@((int)ResizeType.KeepAspect)" />
-                <label>@ResizeType.Skew  </label><input id="skew" name="@nameof(Model.ResizeType)" type="radio" value="@((int)ResizeType.Skew)" />
+                <label>@ResizeType.Crop  </label><input id="crop" name="ResizeType" type="radio" value="@((int)ResizeType.Crop)" />
+                <label>@ResizeType.KeepAspect  </label><input id="keep-aspect" name="ResizeType" type="radio" value="@((int)ResizeType.KeepAspect)" />
+                <label>@ResizeType.Skew  </label><input id="skew" name="ResizeType" type="radio" value="@((int)ResizeType.Skew)" />
             </div>
             <div class="form-group" id="sizes">
-                <label class="col-md-3">Width: </label> <input class="col-md-3" name="@nameof(Model.Width)" type="text" id="width" />
-                <label class="col-md-3">Height: </label> <input class="col-md-3" name="@nameof(Model.Height)" type="text" id="height" />
-                <label class="col-md-3 crop-xy">X: </label> <input name="@nameof(Model.StartX)" class="col-md-3 crop-xy" type="text" id="x" />
-                <label class="col-md-3 crop-xy">Y: </label> <input name="@nameof(Model.StartY)" class="col-md-3 crop-xy" type="text" id="y" />
+                <label class="col-md-3">Width: </label> <input class="col-md-3" name="Width" type="text" id="width" />
+                <label class="col-md-3">Height: </label> <input class="col-md-3" name="Height" type="text" id="height" />
+                <label class="col-md-3 crop-xy">X: </label> <input name="StartX" class="col-md-3 crop-xy" type="text" id="x" />
+                <label class="col-md-3 crop-xy">Y: </label> <input name="StartY" class="col-md-3 crop-xy" type="text" id="y" />
             </div>
             <br />
-            <label>Output file name: </label> <input type="text" name="@nameof(Model.OutputFileName)" />
+            <label>Output file name: </label> <input type="text" name="OutputFileName" />
             <input class="btn btn-primary col-md-offset-6" type="submit" value="Process" data-toggle="modal" data-target="#myModal" />
         </div>
         <div class="content col-md-9">
@@ -107,7 +107,6 @@
 
 
     function showError(data) {
-        console.log(data.responseText);
         $('#error-container').html(data);
     }
 
