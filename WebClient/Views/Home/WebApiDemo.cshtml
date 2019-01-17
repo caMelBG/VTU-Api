@@ -163,7 +163,9 @@
             var data = {};
             if ($('#resize-button').hasClass('btn-success'))
             {
-                url = '@Url.Action("Resize")'
+                url = '/api/webapi/resize';
+                var selectedImage = $('#selected-image').val();
+                var imageName = $('#image-name').val();
                 var resizeType = $('input[name=b]:checked').val();
                 if (resizeType == undefined)
                 {
@@ -177,7 +179,13 @@
                 var y = $('#y').val();
 
                 data = {
-                    imageName, resizeType, width, height, x, y,
+                    sourceImagePath: selectedImage,
+                    destinationImageName: imageName,
+                    resizeType: resizeType,
+                    width: width,
+                    height: height,
+                    x: x,
+                    y: y,
                 }
             }
             else if ($('#convert-button').hasClass('btn-success'))
@@ -211,6 +219,7 @@
                 success: function (data) {
                     $('#myModal').modal('show');
                     $('#myModal').find('img').attr('src', data);
+                    $('#donwload-image').attr('href', data);
                 },
                 fail: function (message) {
                     showErrorMessage(message);
