@@ -8,7 +8,9 @@ namespace WebClient.Controllers
 {
     public class WebApiController : ApiController
     {
-       public IHttpActionResult Convert(string sourceImagePath, string destinationImageName, ImageType imageType)
+        [HttpGet]  
+        [AllowAnonymous]
+        public IHttpActionResult Convert(string sourceImagePath, string destinationImageName, ImageType imageType)
         {
             try
             {
@@ -20,7 +22,7 @@ namespace WebClient.Controllers
                 var destImage = HostingEnvironment.MapPath(outputImageDirectory + "/" + destinationImageName + "." + imageType);
 
                 var converter = new Converter();
-                converter.Convert(sourceImagePath, destImage, imageType);
+                converter.Convert(sourceImage, destImage, imageType);
 
                 var imagePath = outputImageDirectory + "/" + destinationImageName + "." + imageType;
 
